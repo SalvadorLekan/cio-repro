@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIO repro</title>
+
+    <script id="cio-init" type="text/javascript">
+      var _cio = _cio || [];
+      (function () {
+        var a, b, c;
+        a = function (f) {
+          return function () {
+            _cio.push([f].concat(Array.prototype.slice.call(arguments, 0)));
+          };
+        };
+        b = ["load", "identify", "sidentify", "track", "page", "on", "off"];
+        for (c = 0; c < b.length; c++) {
+          _cio[b[c]] = a(b[c]);
+        }
+      })();
+    </script>
+    <script
+      async
+      id="cio-tracker"
+      src="https://assets.customer.io/assets/track.js"
+      data-use-array-params="true"
+      data-site-id="SITE_ID_HERE"
+    ></script>
+  </head>
+  <body>
+    <h1>Customer.io Repro</h1>
+    <form>
+      <label for="email">Email:</label>
+      <input type="email" pattern=".+@.+\..{2,}$" title="type a valid email address" id="email" name="email" required />
+      <button type="submit">Subscribe</button>
+    </form>
+
+    <script>
+      document.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        _cio.identify({
+          id: document.getElementById("email").value,
+          cio_subscription_preferences: {
+            topics: {
+              topic_1: true,
+              topic_2: true,
+            },
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
